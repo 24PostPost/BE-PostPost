@@ -1,9 +1,10 @@
 package com.hyeyeon.Postpost.user.model.service;
 
-import com.hyeyeon.Postpost.user.model.dto.UserResponseDto;
+import com.hyeyeon.Postpost.exception.ConflictException;
+import com.hyeyeon.Postpost.exception.InvalidException;
+import com.hyeyeon.Postpost.exception.NotFoundException;
 import com.hyeyeon.Postpost.user.model.entity.User;
 import com.hyeyeon.Postpost.user.model.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +20,23 @@ public class UserService {
 
     public void updateNickname(Long userId, String nickname) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
+        validationDuplicationNickname(user.getEmail(), nickname, user);
         user.updateNickname(nickname);
     }
 
     public void updateBirthday(Long userId, LocalDate birthday) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
         user.updateBirthday(birthday);
+    }
+
+    private void validationDuplicationNickname(String email, String nickname, User user) {
+        if (user.getNickname() != null && !user.getNickname().equals(nickname)) {
+            if (nickname.isEmpty() || nickname.length() > 16)
+                throw new InvalidException(InvalidException.DEFAULT);
+            if (userRepository.isDuplicationNickname(email, nickname))
+                throw new ConflictException(ConflictException.MEMBER);
+        }
     }
 }
