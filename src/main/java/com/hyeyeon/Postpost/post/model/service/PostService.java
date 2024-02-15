@@ -1,5 +1,6 @@
 package com.hyeyeon.Postpost.post.model.service;
 
+import com.hyeyeon.Postpost.exception.NotFoundException;
 import com.hyeyeon.Postpost.post.model.dto.MyPostDto;
 import com.hyeyeon.Postpost.post.model.dto.PostInfoDto;
 import com.hyeyeon.Postpost.post.model.dto.SharePostDto;
@@ -26,7 +27,7 @@ public class PostService {
     public PostInfoDto getPostInfo(Long postId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
 
         PostInfoDto postInfoDto = PostInfoDto.builder()
                 .postId(post.getPostId())
@@ -42,7 +43,7 @@ public class PostService {
     public List<MyPostDto> getMyPost(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
         List<Post> myPostList = postRepository.findAllByUser(user);
 
@@ -94,7 +95,7 @@ public class PostService {
 
     public String getIcon(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
         return post.getIcon();
     }
 }

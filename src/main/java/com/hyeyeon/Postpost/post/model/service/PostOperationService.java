@@ -1,5 +1,6 @@
 package com.hyeyeon.Postpost.post.model.service;
 
+import com.hyeyeon.Postpost.exception.NotFoundException;
 import com.hyeyeon.Postpost.post.model.dto.PostRequestDto;
 import com.hyeyeon.Postpost.post.model.entity.Post;
 import com.hyeyeon.Postpost.post.model.repository.PostRepository;
@@ -24,7 +25,7 @@ public class PostOperationService {
     public void newIcon(Long userId, String icon) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
         Post post = Post.builder()
                 .user(user)
@@ -37,10 +38,10 @@ public class PostOperationService {
     public void newPost(Long postId, PostRequestDto postRequestDto) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
 
         User user = userRepository.findById(post.getUser().getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
         post.newPost(user, postRequestDto.getTitle(), postRequestDto.getContent(), Timestamp.valueOf(LocalDateTime.now()), 'N');
         postRepository.save(post);
@@ -48,19 +49,19 @@ public class PostOperationService {
 
     public void editPost(Long postId, PostRequestDto postRequestDto) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
         post.updatePost(postRequestDto.getIcon(), postRequestDto.getTitle(), postRequestDto.getContent());
     }
 
     public void sharePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
         post.sharePost();
     }
 
     public void cancelSharePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
         post.cancelSharePost();
     }
 

@@ -3,6 +3,7 @@ package com.hyeyeon.Postpost.comment.model.service;
 import com.hyeyeon.Postpost.comment.model.dto.CommentResponseDto;
 import com.hyeyeon.Postpost.comment.model.entity.Comment;
 import com.hyeyeon.Postpost.comment.model.repository.CommentRepository;
+import com.hyeyeon.Postpost.exception.NotFoundException;
 import com.hyeyeon.Postpost.post.model.entity.Post;
 import com.hyeyeon.Postpost.post.model.repository.PostRepository;
 import com.hyeyeon.Postpost.user.model.entity.User;
@@ -27,7 +28,7 @@ public class CommentService {
     public List<CommentResponseDto> getPostComments(Long postId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
 
         List<Comment> commentsList = commentRepository.findAllByPost(post);
 
@@ -49,10 +50,10 @@ public class CommentService {
     public void newComment(Long postId, Long userId, String content) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 포스트가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
 
         Comment comment = Comment.builder()
                 .user(user)
@@ -64,9 +65,8 @@ public class CommentService {
     }
 
     public void editComment(Long commentId, String content) {
-        System.out.println("editComment");
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다"));
+                .orElseThrow(() -> new NotFoundException(NotFoundException.COMMENT));
         comment.updateComment(content);
     }
 
