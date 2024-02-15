@@ -6,6 +6,7 @@ import lombok.Getter;
 public class BusinessException extends RuntimeException {
 
     private final int httpStatusCode;
+    
     private final String message;
 
     public BusinessException(int httpStatusCode, String message) {
