@@ -4,6 +4,9 @@ import com.hyeyeon.Postpost.comment.model.dto.CommentResponseDto;
 import com.hyeyeon.Postpost.comment.model.entity.Comment;
 import com.hyeyeon.Postpost.comment.model.repository.CommentRepository;
 import com.hyeyeon.Postpost.exception.NotFoundException;
+import com.hyeyeon.Postpost.notification.model.entity.Notification;
+import com.hyeyeon.Postpost.notification.model.entity.NotificationType;
+import com.hyeyeon.Postpost.notification.model.repository.NotificationRepository;
 import com.hyeyeon.Postpost.post.model.entity.Post;
 import com.hyeyeon.Postpost.post.model.repository.PostRepository;
 import com.hyeyeon.Postpost.user.model.entity.User;
@@ -24,6 +27,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final NotificationRepository notificationRepository;
 
     public List<CommentResponseDto> getPostComments(Long postId) {
 
@@ -61,7 +65,15 @@ public class CommentService {
                 .content(content)
                 .build();
 
+        Notification notification = Notification.builder()
+                .user(post.getUser())
+                .post(post)
+                .notiType(NotificationType.Comment)
+                .isRead('N')
+                .build();
+
         commentRepository.save(comment);
+        notificationRepository.save(notification);
     }
 
     public void editComment(Long commentId, String content) {
