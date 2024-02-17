@@ -27,13 +27,6 @@ public class MainController {
         return ResponseEntity.ok(sharePostList);
     }
 
-//    // 알림창
-//    @GetMapping("/notifications/{userId}")
-//    public ResponseEntity<List<NotificationDto>> notiPage() {
-//        List<NotificationDto> notificationList = notificationService.getListOfNotification();
-//        return ResponseEntity.ok(notificationList)
-//    }
-
 //    // 우체통창
 //    @GetMapping("/mailbox/{userId}")
 //    public String mailboxPage() {
