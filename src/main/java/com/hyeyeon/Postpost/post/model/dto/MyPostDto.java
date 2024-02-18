@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,10 +12,10 @@ public class MyPostDto {
 
     private Long postId;
     private String icon;
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
     @Builder
-    public MyPostDto(Long postId, String icon, Timestamp createdAt) {
+    public MyPostDto(Long postId, String icon, LocalDate createdAt) {
         this.postId = postId;
         this.icon = icon;
         this.createdAt = createdAt;
