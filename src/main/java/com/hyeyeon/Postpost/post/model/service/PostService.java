@@ -1,10 +1,7 @@
 package com.hyeyeon.Postpost.post.model.service;
 
 import com.hyeyeon.Postpost.exception.NotFoundException;
-import com.hyeyeon.Postpost.post.model.dto.MyPostDto;
-import com.hyeyeon.Postpost.post.model.dto.PostInfoDto;
-import com.hyeyeon.Postpost.post.model.dto.SharePostDto;
-import com.hyeyeon.Postpost.post.model.dto.UserPostDto;
+import com.hyeyeon.Postpost.post.model.dto.*;
 import com.hyeyeon.Postpost.post.model.entity.Post;
 import com.hyeyeon.Postpost.post.model.repository.PostRepository;
 import com.hyeyeon.Postpost.user.model.entity.User;
@@ -16,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 @Transactional
@@ -137,35 +132,77 @@ public class PostService {
         return userPostDtoList;
     }
 
-    public void getTop3Icon(Long userId) {
+    public List<IconRankDto> getTop3Icon(Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
+        return getIconRankDtos(user);
+    }
+
+    private List<IconRankDto> getIconRankDtos(User user) {
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
 
         List<Post> allUserPostList = postRepository.findAllByUser(user);
 
-        List<Post> monthPostList = new ArrayList<>();
-        int proudCnt = 0;
-        int happyCnt = 0;
-        int calmCnt = 0;
-        int tiredCnt = 0;
-        int depressedCnt = 0;
-        int angryCnt = 0;
-        int sadCnt = 0;
+        Map<String, Integer> monthlyPostIconList = new HashMap<>();
+        monthlyPostIconList.put("proud", 0);
+        monthlyPostIconList.put("happy", 0);
+        monthlyPostIconList.put("calm", 0);
+        monthlyPostIconList.put("tired", 0);
+        monthlyPostIconList.put("depressed", 0);
+        monthlyPostIconList.put("angry", 0);
+        monthlyPostIconList.put("sad", 0);
 
         for (Post post : allUserPostList) {
             if (post.getCreatedAt().getYear() == year && post.getCreatedAt().getMonthValue() == month) {
-                if (post.getIcon() == "proud") proudCnt += 1;
-                else if (post.getIcon() == "happy") happyCnt += 1;
-                else if (post.getIcon() == "calm") calmCnt += 1;
-                else if (post.getIcon() == "tired") tiredCnt += 1;
-                else if (post.getIcon() == "depressed") depressedCnt += 1;
-                else if (post.getIcon() == "angry") angryCnt += 1;
-                else if (post.getIcon() == "sad") sadCnt += 1;
+                if ("proud".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("proud", monthlyPostIconList.get("proud") + 1);
+                }
+                else if ("happy".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("happy", monthlyPostIconList.get("happy") + 1);
+                }
+                else if ("calm".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("calm", monthlyPostIconList.get("calm") + 1);
+                }
+                else if ("tired".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("tired", monthlyPostIconList.get("tired") + 1);
+                }
+                else if ("depressed".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("depressed", monthlyPostIconList.get("depressed") + 1);
+                }
+                else if ("angry".equals(post.getIcon())) {
+                    monthlyPostIconList.replace("angry", monthlyPostIconList.get("angry") + 1);
+                }
+                else {
+                    monthlyPostIconList.replace("sad", monthlyPostIconList.get("sad") + 1);
+                }
             }
         }
+
+        List<Map.Entry<String,Integer>> list = new ArrayList<Map.Entry<String,Integer>>(monthlyPostIconList.entrySet());
+
+        Collections.sort(list, new Comparator<>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue()); // 내림차순
+            }
+        });
+
+        Map<String, Integer> result = new HashMap<>();
+        List<IconRankDto> iconRankDtoList = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            result.put(list.get(i).getKey(), list.get(i).getValue());
+            IconRankDto iconRankDto = IconRankDto.builder()
+                    .icon(list.get(i).getKey())
+                    .rank(i+1)
+                    .build();
+
+            iconRankDtoList.add(iconRankDto);
+        }
+
+        return iconRankDtoList;
     }
 }
