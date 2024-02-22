@@ -2,6 +2,7 @@ package com.hyeyeon.Postpost.post.controller;
 
 import com.hyeyeon.Postpost.post.model.dto.MyPostDto;
 import com.hyeyeon.Postpost.post.model.dto.PostInfoDto;
+import com.hyeyeon.Postpost.post.model.dto.TodayDateDto;
 import com.hyeyeon.Postpost.post.model.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,13 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    // 포스트 작성창
+    @GetMapping("")
+    public ResponseEntity<TodayDateDto> newPost() {
+        TodayDateDto todayDateDto = postService.getTodayDate();
+        return ResponseEntity.ok(todayDateDto);
+    }
 
     // 포스트 내용창
     @GetMapping("/{postId}")
@@ -40,17 +48,17 @@ public class PostController {
         return ResponseEntity.ok(myPostList);
     }
 
-    // 포스트 작성 후, 확인 모달
-    @GetMapping("/new/result/{postId}")
-    public ResponseEntity<?> newResult(@PathVariable Long postId) {
-        String icon = postService.getIcon(postId);
-        return ResponseEntity.ok(icon);
-    }
-
-    // 포스트 공유 후, 확인 모달
-    @GetMapping("/share/result/{postId}")
-    public ResponseEntity<?> shareResult(@PathVariable Long postId) {
-        String icon = postService.getIcon(postId);
-        return ResponseEntity.ok(icon);
-    }
+//    // 포스트 작성 후, 확인 모달
+//    @GetMapping("/new/result/{postId}")
+//    public ResponseEntity<?> newResult(@PathVariable Long postId) {
+//        String icon = postService.getIcon(postId);
+//        return ResponseEntity.ok(icon);
+//    }
+//
+//    // 포스트 공유 후, 확인 모달
+//    @GetMapping("/share/result/{postId}")
+//    public ResponseEntity<?> shareResult(@PathVariable Long postId) {
+//        String icon = postService.getIcon(postId);
+//        return ResponseEntity.ok(icon);
+//    }
 }

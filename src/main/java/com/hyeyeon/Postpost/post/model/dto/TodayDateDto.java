@@ -8,17 +8,13 @@ import java.time.LocalDate;
 
 @Getter
 @RequiredArgsConstructor
-public class MyPostDto {
+public class TodayDateDto {
 
-    private Long postId;
-    private String icon;
     private LocalDate createdAt;
     private String day;
 
     @Builder
-    public MyPostDto(Long postId, String icon, LocalDate createdAt, String day) {
-        this.postId = postId;
-        this.icon = icon;
+    public TodayDateDto(LocalDate createdAt, String day) {
         this.createdAt = createdAt;
         this.day = day;
     }
