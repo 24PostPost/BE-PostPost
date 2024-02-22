@@ -19,7 +19,6 @@ public class UserService {
     public void updateNickname(Long userId, String nickname) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
-//        validationDuplicationNickname(user.getEmail(), nickname, user);
         user.updateNickname(nickname);
     }
 
@@ -34,13 +33,4 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
         return user.getNickname();
     }
-
-//    private void validationDuplicationNickname(String email, String nickname, User user) {
-//        if (user.getNickname() != null && !user.getNickname().equals(nickname)) {
-//            if (nickname.isEmpty() || nickname.length() > 16)
-//                throw new InvalidException(InvalidException.DEFAULT);
-//            if (userRepository.isDuplicationNickname(email, nickname))
-//                throw new ConflictException(ConflictException.MEMBER);
-//        }
-//    }
 }
