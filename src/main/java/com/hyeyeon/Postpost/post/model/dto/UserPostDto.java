@@ -4,20 +4,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @RequiredArgsConstructor
-public class MyPostDto {
+public class UserPostDto {
 
     private Long postId;
     private String icon;
-    private LocalDate createdAt;
+    private int day;
+    private String nickname;
 
     @Builder
-    public MyPostDto(Long postId, String icon, LocalDate createdAt) {
+    public UserPostDto(Long postId, String icon, int day, String nickname) {
         this.postId = postId;
         this.icon = icon;
-        this.createdAt = createdAt;
+        this.day = day;
+        this.nickname = nickname;
     }
 }

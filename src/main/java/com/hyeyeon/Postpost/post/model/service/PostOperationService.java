@@ -6,13 +6,11 @@ import com.hyeyeon.Postpost.post.model.entity.Post;
 import com.hyeyeon.Postpost.post.model.repository.PostRepository;
 import com.hyeyeon.Postpost.user.model.entity.User;
 import com.hyeyeon.Postpost.user.model.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -43,7 +41,7 @@ public class PostOperationService {
         User user = userRepository.findById(post.getUser().getUserId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
-        post.newPost(user, postRequestDto.getTitle(), postRequestDto.getContent(), Timestamp.valueOf(LocalDateTime.now()), 'N');
+        post.newPost(user, postRequestDto.getTitle(), postRequestDto.getContent(), LocalDate.now(), 'N');
         postRepository.save(post);
     }
 

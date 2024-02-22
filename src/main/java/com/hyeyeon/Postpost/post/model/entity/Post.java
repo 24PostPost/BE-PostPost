@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -30,7 +28,7 @@ public class Post {
     private String content;
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
     private char isOpen; //'Y', 'N'
 
@@ -41,7 +39,7 @@ public class Post {
     }
 
     // 포스트 작성
-    public void newPost(User user, String title, String content, Timestamp createdAt, char isOpen) {
+    public void newPost(User user, String title, String content, LocalDate createdAt, char isOpen) {
         this.user = user;
         this.title = title;
         this.content = content;
