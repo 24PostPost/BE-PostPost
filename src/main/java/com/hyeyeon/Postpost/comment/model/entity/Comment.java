@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,20 +32,21 @@ public class Comment {
 
     private String content;
 
-    @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDate date;
+    private LocalTime time;
 
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parentCommentId")
     private final List<ChildComment> childComments = new ArrayList<>();
 
     @Builder
-    public Comment(Long commentId, User user, Post post, String content, Timestamp createdAt) {
+    public Comment(Long commentId, User user, Post post, String content, LocalDate date, LocalTime time) {
         this.commentId = commentId;
         this.user = user;
         this.post = post;
         this.content = content;
-        this.createdAt = createdAt;
+        this.date = date;
+        this.time = time;
     }
 
     // 댓글 수정

@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -16,5 +14,7 @@ public class CommentResponseDto {
     private Long commentId;
     private String nickname;
     private String content;
-    private Timestamp createdAt;
+    private int date;
+    private int hour;
+    private int min;
 }

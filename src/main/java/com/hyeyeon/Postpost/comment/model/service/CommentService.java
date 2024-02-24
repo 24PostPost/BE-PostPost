@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +38,49 @@ public class CommentService {
 
         List<Comment> commentsList = commentRepository.findAllByPost(post);
 
+        // 프론트 측 확인 후 수정
+        // if) 년원일시분만 넘겨주면 되면 원래대로 변경
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentsList) {
-            CommentResponseDto commentResponseDto = CommentResponseDto.builder()
-                    .commentId(comment.getCommentId())
-                    .nickname(comment.getUser().getNickname())
-                    .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt())
-                    .build();
+            if (comment.getDate().equals(LocalDate.now())) {
+                if (comment.getTime().getHour() == LocalTime.now().getHour()) {
+                    int min = LocalTime.now().getMinute() - comment.getTime().getMinute();
+                    CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                            .commentId(comment.getCommentId())
+                            .nickname(comment.getUser().getNickname())
+                            .content(comment.getContent())
+                            .min(min)
+                            .build();
 
-            commentResponseDtoList.add(commentResponseDto);
+                    commentResponseDtoList.add(commentResponseDto);
+                }
+                else {
+                    int hour = LocalTime.now().getHour() - comment.getTime().getHour();
+                    CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                            .commentId(comment.getCommentId())
+                            .nickname(comment.getUser().getNickname())
+                            .content(comment.getContent())
+                            .hour(hour)
+                            .build();
+
+                    commentResponseDtoList.add(commentResponseDto);
+                }
+            }
+            else {
+                LocalDate date1 = comment.getDate();
+                LocalDate date2 = LocalDate.now();
+
+                int days = Period.between(date1, date2).getDays();
+
+                CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                        .commentId(comment.getCommentId())
+                        .nickname(comment.getUser().getNickname())
+                        .content(comment.getContent())
+                        .date(days)
+                        .build();
+
+                commentResponseDtoList.add(commentResponseDto);
+            }
         }
 
         return commentResponseDtoList;
@@ -62,6 +98,8 @@ public class CommentService {
                 .user(user)
                 .post(post)
                 .content(content)
+                .date(LocalDate.now())
+                .time(LocalTime.now())
                 .build();
 
         Notification notification = Notification.builder()
