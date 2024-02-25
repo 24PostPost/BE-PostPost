@@ -50,6 +50,7 @@ public class PostService {
                 .icon(post.getIcon())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .imageUri(post.getImageUri())
                 .createdAt(LocalDate.now())
                 .day(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))
                 .build();

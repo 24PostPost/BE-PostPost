@@ -41,14 +41,14 @@ public class PostOperationService {
         User user = userRepository.findById(post.getUser().getUserId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER));
 
-        post.newPost(user, postRequestDto.getTitle(), postRequestDto.getContent(), LocalDate.now(), 'N');
+        post.newPost(user, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUri(), LocalDate.now(), 'N');
         postRepository.save(post);
     }
 
     public void editPost(Long postId, PostRequestDto postRequestDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
-        post.updatePost(postRequestDto.getIcon(), postRequestDto.getTitle(), postRequestDto.getContent());
+        post.updatePost(postRequestDto.getIcon(), postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUri());
     }
 
     public void sharePost(Long postId) {
