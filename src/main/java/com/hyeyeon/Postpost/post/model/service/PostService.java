@@ -23,6 +23,20 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    public TodayDateDto getTodayDate() {
+
+        LocalDate date = LocalDate.now();
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN);
+
+        TodayDateDto todayDateDto = TodayDateDto.builder()
+                .createdAt(date)
+                .day(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))
+                .build();
+
+        return todayDateDto;
+    }
+
     public PostInfoDto getPostInfo(Long postId) {
 
         Post post = postRepository.findById(postId)
@@ -30,13 +44,13 @@ public class PostService {
 
         LocalDate date = LocalDate.now();
         DayOfWeek dayOfWeek = date.getDayOfWeek();
-        dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN);
 
         PostInfoDto postInfoDto = PostInfoDto.builder()
                 .postId(post.getPostId())
                 .icon(post.getIcon())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .imageUri(post.getImageUri())
                 .createdAt(LocalDate.now())
                 .day(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))
                 .build();
@@ -56,12 +70,16 @@ public class PostService {
             myPostInfoList.add(post);
         }
 
+        LocalDate date = LocalDate.now();
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
         List<MyPostDto> postInfoDtoList = new ArrayList<>();
         for (Post post : myPostInfoList) {
             MyPostDto myPostDto = MyPostDto.builder()
                     .postId(post.getPostId())
                     .icon(post.getIcon())
-                    .createdAt(LocalDate.now())
+                    .createdAt(date)
+                    .day(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))
                     .build();
 
             postInfoDtoList.add(myPostDto);
@@ -70,11 +88,11 @@ public class PostService {
         return postInfoDtoList;
     }
 
-    public String getIcon(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
-        return post.getIcon();
-    }
+//    public String getIcon(Long postId) {
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(() -> new NotFoundException(NotFoundException.POST));
+//        return post.getIcon();
+//    }
 
     public List<SharePostDto> getSharePost() {
 

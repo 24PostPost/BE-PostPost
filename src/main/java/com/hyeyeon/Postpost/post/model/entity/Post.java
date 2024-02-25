@@ -27,6 +27,8 @@ public class Post {
     private String title;
     private String content;
 
+    private String imageUri;
+
     @CreationTimestamp
     private LocalDate createdAt;
 
@@ -39,19 +41,21 @@ public class Post {
     }
 
     // 포스트 작성
-    public void newPost(User user, String title, String content, LocalDate createdAt, char isOpen) {
+    public void newPost(User user, String title, String content, String imageUri, LocalDate createdAt, char isOpen) {
         this.user = user;
         this.title = title;
         this.content = content;
+        this.imageUri = imageUri;
         this.createdAt = createdAt;
         this.isOpen = isOpen;
     }
 
     // 포스트 수정
-    public void updatePost(String icon, String title, String content) {
+    public void updatePost(String icon, String title, String content, String imageUri) {
         this.icon = icon;
         this.title = title;
         this.content = content;
+        this.imageUri = imageUri;
     }
 
     // 포스트 공유
